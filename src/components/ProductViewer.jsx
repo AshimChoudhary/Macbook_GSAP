@@ -2,20 +2,19 @@ import React from "react";
 import useMacBookStore from "../store";
 import clsx from "clsx";
 import { Canvas } from "@react-three/fiber";
-import { Box, OrbitControls } from "@react-three/drei";
-import MacBookModel14 from "./models/Macbook-14";
-import StudioLights from "./StudioLights";
+import StudioLights from "./three/StudioLights";
+import ModelSwitcher from "./three/ModelSwitcher";
+import { useMediaQuery } from "react-responsive";
 
 const ProductViewer = () => {
   const { color, scale, setScale, setColor } = useMacBookStore();
-
+  const isMobile = useMediaQuery({ query: "(max-width:1024px)" });
   return (
     <section id="product-viewer">
       <h2>Take a closer look</h2>
       <div className="controls">
         <p className="info">
-          MacBook Pro {scale} in {color}
-        </p>
+          MacBook Pro | Available in 14" & 16" in Space Gray & Dark colors
 
         <div className="flex-center gap-5 mt-5">
           <div className="color-control">
@@ -23,7 +22,7 @@ const ProductViewer = () => {
               onClick={() => setColor("#adb5bd")}
               className={clsx(
                 "bg-neutral-300",
-                color === "#abd5bd" && "active"
+                color === "#adb5bd" && "active"
               )}
             />
             <div
@@ -66,9 +65,10 @@ const ProductViewer = () => {
         camera={{ position: [0, 2, 5], fov: 50, near: 0.1, far: 100 }}
       >
         <StudioLights />
-        <MacBookModel14 scale={0.06} position={[0, 0, 0]} />
-
-        <OrbitControls enableZoom={false} />
+        <ModelSwitcher
+          isMobile={isMobile}
+          scale={isMobile ? scale - 0.03 : scale}
+        />
       </Canvas>
     </section>
   );
